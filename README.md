@@ -1,5 +1,7 @@
 # 📸 Image Feed App - Image Feed Feature  
 
+[![CI](https://github.com/kuzeng/ImageFeedApp/actions/workflows/CI.yml/badge.svg)](https://github.com/kuzeng/ImageFeedApp/actions/workflows/CI.yml)
+
 ## **Story: Customer Requests to See Their Image Feed**  
 
 ### **Narrative #1: Online Customer**  
