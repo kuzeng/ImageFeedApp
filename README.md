@@ -26,11 +26,19 @@ So I can always enjoy images of my friends.
 
 ### **Scenario 1: Display Cached Feed**  
 ✅ **Given** the customer doesn't have connectivity  
-✅ **And** there’s a cached version of the feed  
+✅ **And** there’s a cached version of the feed
+✅ **And** And the cache is less than seven days old
 ✅ **When** the customer requests to see the feed  
 ✅ **Then** the app should display the latest feed saved  
 
-### **Scenario 2: No Cached Feed**  
+### **Scenario 2: Cache is Older than Seven Days**  
+✅ **Given** the customer doesn't have connectivity  
+✅ **And** there’s a cached version of the feed
+✅ **And** And the cache is seven days old or more
+✅ **When** the customer requests to see the feed  
+✅ **Then** the app should display an error message  
+
+### **Scenario 3: No Cached Feed**  
 ✅ **Given** the customer doesn't have connectivity  
 ✅ **And** the cache is empty  
 ✅ **When** the customer requests to see the feed  
@@ -40,7 +48,7 @@ So I can always enjoy images of my friends.
 
 ## **Use Cases**
 
-### **Load Feed Use Case**  
+### **Load Feed From Remote Use Case**  
 📥 **Data (Input):**  
 - URL  
 
