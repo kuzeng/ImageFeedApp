@@ -60,36 +60,48 @@ So I can always enjoy images of my friends.
 5. System delivers the feed items.  
 
 ❌ **Invalid Data – Error Course (Sad Path):**  
-- System delivers an error.  
+- System delivers invalid data error.  
 
 ❌ **No Connectivity – Error Course (Sad Path):**  
-- System delivers an error.  
+- System delivers connectivity error.  
 
 ---
 
-### **Load Feed Fallback (Cache) Use Case**  
-📥 **Data (Input):**  
-- Max age  
+### **Load Feed From Cache Use Case**  
 
 🔹 **Primary Course (Happy Path):**  
-1. Execute the **"Retrieve Feed Items"** command with the given max age.  
-2. System fetches feed data from the cache.  
-3. System creates feed items from the cached data.  
-4. System delivers the feed items.  
+1. Execute the **"Load Feed Items"** command with the above data.  
+2. System fetches feed data from the cache.
+3. System validates cache is less than seven days old.  
+4. System creates feed items from the cached data.  
+5. System delivers the feed items.  
 
-❌ **No Cache – Error Course (Sad Path):**  
-- System delivers no feed items.  
+❌ **Error Course (Sad Path):**  
+1. System delivers error.
+
+❌ **Expired Cache Course (Sad Path):**  
+1. System deletes cache.
+2. System delivers no feed items.
+
+❌ **Empty Cache Course (Sad Path):**  
+1. System delivers no feed items.  
 
 ---
 
-### **Save Feed Items Use Case**  
+### **Cache Feed Use Case**  
 📥 **Data (Input):**  
 - Feed items  
 
 🔹 **Primary Course (Happy Path):**  
 1. Execute the **"Save Feed Items"** command with the provided feed items.  
-2. System encodes feed items.  
-3. System timestamps the new cache.  
-4. System replaces the cache with new data.  
-5. System delivers a success message.  
+2. System deletes old cache data.
+3. System encodes feed items.  
+4. System timestamps the new cache.  
+5. System saves new cache data.
+6. System delivers a success message.  
 
+❌ **Deleting Error Course (Sad Path):**  
+1. System delivers error.
+
+❌ **Saving Error Course (Sad Path):**  
+1. System delivers error.
