@@ -53,11 +53,11 @@ So I can always enjoy images of my friends.
 - URL  
 
 🔹 **Primary Course (Happy Path):**  
-1. Execute the **"Load Feed Items"** command with the given URL.  
+1. Execute the **"Load Image Feed"** command with the given URL.  
 2. System downloads data from the URL.  
 3. System validates the downloaded data.  
-4. System creates feed items from the valid data.  
-5. System delivers the feed items.  
+4. System creates image feed from the valid data.  
+5. System delivers the image feed.  
 
 ❌ **Invalid Data – Error Course (Sad Path):**  
 - System delivers invalid data error.  
@@ -70,32 +70,32 @@ So I can always enjoy images of my friends.
 ### **Load Feed From Cache Use Case**  
 
 🔹 **Primary Course (Happy Path):**  
-1. Execute the **"Load Feed Items"** command with the above data.  
+1. Execute the **"Load Image Feed"** command with the above data.  
 2. System fetches feed data from the cache.
 3. System validates cache is less than seven days old.  
-4. System creates feed items from the cached data.  
-5. System delivers the feed items.  
+4. System creates image feed from the cached data.  
+5. System delivers the image feed.  
 
 ❌ **Error Course (Sad Path):**  
 1. System delivers error.
 
 ❌ **Expired Cache Course (Sad Path):**  
 1. System deletes cache.
-2. System delivers no feed items.
+2. System delivers no feed images.
 
 ❌ **Empty Cache Course (Sad Path):**  
-1. System delivers no feed items.  
+1. System delivers no feed images.  
 
 ---
 
 ### **Cache Feed Use Case**  
 📥 **Data (Input):**  
-- Feed items  
+- Image Feed  
 
 🔹 **Primary Course (Happy Path):**  
-1. Execute the **"Save Feed Items"** command with the provided feed items.  
+1. Execute the **"Save Image Feed"** command with the provided feed items.  
 2. System deletes old cache data.
-3. System encodes feed items.  
+3. System encodes image feed.  
 4. System timestamps the new cache.  
 5. System saves new cache data.
 6. System delivers a success message.  
@@ -105,3 +105,14 @@ So I can always enjoy images of my friends.
 
 ❌ **Saving Error Course (Sad Path):**  
 1. System delivers error.
+
+### Feed Image
+
+| Property        | Type                |
+|-----------------|---------------------|
+| `id`            | `UUID`              |
+| `description`   | `String` (optional) |
+| `location`      | `String` (optional) |
+| `url`           | `URL`               |
+
+
