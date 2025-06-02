@@ -71,13 +71,14 @@ So I can always enjoy images of my friends.
 
 🔹 **Primary Course (Happy Path):**  
 1. Execute the **"Load Image Feed"** command with the above data.  
-2. System fetches feed data from the cache.
+2. System retrieves feed data from cache.
 3. System validates cache is less than seven days old.  
 4. System creates image feed from the cached data.  
 5. System delivers the image feed.  
 
-❌ **Error Course (Sad Path):**  
-1. System delivers error.
+❌ **Retrieval Error Course (Sad Path):**  
+1. System deletes cache.
+2. System delivers error.
 
 ❌ **Expired Cache Course (Sad Path):**  
 1. System deletes cache.
