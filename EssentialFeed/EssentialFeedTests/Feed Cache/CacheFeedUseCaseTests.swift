@@ -79,7 +79,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         
         var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save(uniqueImageFeed().models) { receivedResult.append($0) }
-
+        
         sut = nil
         store.completeDeletion(with: anyNSError())
         
@@ -92,7 +92,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         
         var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save(uniqueImageFeed().models) { receivedResult.append($0) }
-
+        
         store.completeDeletionSuccessfully()
         sut = nil
         store.completionInsertion(with: anyNSError())
@@ -123,23 +123,5 @@ class CacheFeedUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertEqual(receivedError as NSError?, expectedError, file: file, line: line)
-    }
-    
-    private func uniqueImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: "ANY", location: "ANY", url: anyURL())
-    }
-    
-    private func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let models = [uniqueImage(), uniqueImage()]
-        let local = models.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
-        return (models, local)
-    }
-    
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-    
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
     }
 }
