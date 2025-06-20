@@ -10,12 +10,13 @@ import EssentialFeed
 
 class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     func test_retrieve_deliversFailureOnRetrievalError() {
-        let sut = CoreDataFeedStore()
+        let sut = makeSUT()
         assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
     func test_retrieve_hasNoSideEffectsOnFailure() {
-        
+        let sut = makeSUT()
+        assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
     func test_insert_deliversErrorOnInsertionError() {
