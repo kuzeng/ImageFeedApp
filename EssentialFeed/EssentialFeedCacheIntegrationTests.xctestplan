@@ -22,7 +22,6 @@
     {
       "parallelizable" : true,
       "skippedTests" : [
-        "EssentialFeedCacheIntegrationTests",
         "EssentialFeedCacheIntegrationTests\/testExample()",
         "EssentialFeedCacheIntegrationTests\/testPerformanceExample()"
       ],
