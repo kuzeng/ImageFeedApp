@@ -9,7 +9,7 @@
     }
   ],
   "defaultOptions" : {
-
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
@@ -26,6 +26,13 @@
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "DFF643222DDD662600617200",
         "name" : "EssentialFeedAPI EndToEndTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "identifier" : "1A7F919B2E0BB12C00A04632",
+        "name" : "EssentialFeedCacheIntegrationTests"
       }
     }
   ],
