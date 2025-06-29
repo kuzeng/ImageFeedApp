@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "3FCFCDC1-AA65-414A-9477-8D72A4903EF5",
+      "id" : "A705A603-E9CE-4549-890A-AFF22B946519",
       "name" : "Configuration 1",
       "options" : {
 
@@ -13,7 +13,6 @@
   },
   "testTargets" : [
     {
-      "enabled" : false,
       "target" : {
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "1A7F91FB2E11F19800A04632",
@@ -21,7 +20,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "DFF643222DDD662600617200",
@@ -29,7 +27,6 @@
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "080EDEF921B6DA7E00813479",
