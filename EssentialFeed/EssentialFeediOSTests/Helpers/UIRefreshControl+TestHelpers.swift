@@ -20,3 +20,9 @@ class FakeRefreshControl: UIRefreshControl {
         _isRefreshing = false
     }
 }
+
+extension UIRefreshControl {
+    func simulatePullToRefresh() {
+        simulate(event: .valueChanged)
+    }
+}
