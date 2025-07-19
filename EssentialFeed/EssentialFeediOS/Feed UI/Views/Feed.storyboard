@@ -125,6 +125,7 @@
                         <connections>
                             <outlet property="dataSource" destination="KNW-Dq-puG" id="jL9-rJ-6gj"/>
                             <outlet property="delegate" destination="KNW-Dq-puG" id="6EG-W7-4ZQ"/>
+                            <outlet property="prefetchDataSource" destination="KNW-Dq-puG" id="v24-Mb-8xv"/>
                         </connections>
                     </tableView>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="ZIu-CZ-bfm">
