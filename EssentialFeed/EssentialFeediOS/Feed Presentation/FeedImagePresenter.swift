@@ -18,7 +18,7 @@ final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == I
     private let view: View
     private let imageTransformer: (Data) -> Image?
 
-    internal init(view: View, imageTransformer: @escaping (Data) -> Image?) {
+    init(view: View, imageTransformer: @escaping (Data) -> Image?) {
         self.view = view
         self.imageTransformer = imageTransformer
     }
