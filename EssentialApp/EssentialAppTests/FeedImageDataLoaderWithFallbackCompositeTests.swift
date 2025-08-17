@@ -155,16 +155,4 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             messages[index].completion(.success(data))
         }
     }
-    
-    private func anyData() -> Data {
-        Data("any data".utf8)
-    }
-    
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any", code: 0)
-    }
-    
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
 }
