@@ -5,6 +5,7 @@
 //  Created by KDZ on 8/17/25.
 //
 
+import EssentialFeed
 import Foundation
 
 func anyData() -> Data {
@@ -17,4 +18,8 @@ func anyNSError() -> NSError {
 
 func anyURL() -> URL {
     URL(string: "https://any-url.com")!
+}
+
+func uniqueFeed() -> [FeedImage] {
+    return [FeedImage(id: UUID(), description: "any", location: "any", url: anyURL())]
 }
