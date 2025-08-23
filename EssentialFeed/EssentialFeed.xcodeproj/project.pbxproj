@@ -213,6 +213,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		1A15F1642E5A567000224F8D /* EssentialAppUIAcceptanceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialAppUIAcceptanceTests; sourceTree = "<group>"; };
 		1A7F919D2E0BB12C00A04632 /* EssentialFeedCacheIntegrationTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeedCacheIntegrationTests; sourceTree = "<group>"; };
 		1A7F91F62E11F19800A04632 /* EssentialFeediOS */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeediOS; sourceTree = "<group>"; };
 		1A7F92002E11F19800A04632 /* EssentialFeediOSTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeediOSTests; sourceTree = "<group>"; };
@@ -285,6 +286,7 @@
 				1A7F919D2E0BB12C00A04632 /* EssentialFeedCacheIntegrationTests */,
 				1A7F91F62E11F19800A04632 /* EssentialFeediOS */,
 				1A7F92002E11F19800A04632 /* EssentialFeediOSTests */,
+				1A15F1642E5A567000224F8D /* EssentialAppUIAcceptanceTests */,
 				1A7F91872E0882F100A04632 /* Frameworks */,
 				080EDEF221B6DA7E00813479 /* Products */,
 			);
