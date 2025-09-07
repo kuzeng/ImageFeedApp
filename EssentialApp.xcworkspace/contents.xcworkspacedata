@@ -13,4 +13,7 @@
    <FileRef
       location = "group:../EssentialAppUIAcceptanceTests.xctestplan">
    </FileRef>
+   <FileRef
+      location = "group:../EssentialAppTests.xctestplan">
+   </FileRef>
 </Workspace>
