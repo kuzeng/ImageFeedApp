@@ -27,7 +27,7 @@ func assert(snapshot: UIImage, named name: String, file: StaticString = #file, l
     }
 }
 
-func record(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+func recordSnapshot(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
     let snapshotURL = makeSnapshotURL(named: name, file: file)
     let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
     
@@ -38,6 +38,7 @@ func record(snapshot: UIImage, named name: String, file: StaticString = #file, l
         )
         
         try snapshotData?.write(to: snapshotURL)
+        XCTFail("Record succeeded - use `assert` to compare the snapshot from now on.", file: file, line: line)
     } catch {
         XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
     }
