@@ -11,7 +11,7 @@ import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
 
-final class FeedUIIntegrationTests: XCTestCase {
+class FeedUIIntegrationTests: XCTestCase {
     
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
@@ -365,7 +365,7 @@ final class FeedUIIntegrationTests: XCTestCase {
     }
 }
 
-private extension ListViewController {
+extension ListViewController {
     func replaceRefreshControlWithFakeForiOS17Support() {
         let fake = FakeRefreshControl()
 
