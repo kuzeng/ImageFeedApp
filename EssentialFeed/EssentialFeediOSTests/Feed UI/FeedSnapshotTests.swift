@@ -91,17 +91,18 @@ struct SnapshotConfiguration {
             size: CGSize(width: 375, height: 667),
             safeAreaInsets: UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0),
             layoutMargins: UIEdgeInsets(top: 20, left: 16, bottom: 0, right: 16),
-            traitCollection: UITraitCollection(traitsFrom: [
-                .init(forceTouchCapability: .available),
-                .init(layoutDirection: .leftToRight),
-                .init(preferredContentSizeCategory: contentSize),
-                .init(userInterfaceIdiom: .phone),
-                .init(horizontalSizeClass: .compact),
-                .init(verticalSizeClass: .regular),
-                .init(displayScale: 2),
-                .init(displayGamut: .P3),
-                .init(userInterfaceStyle: style)
-            ]))
+            traitCollection: UITraitCollection(mutations: { traits in
+                traits.forceTouchCapability = .available
+                traits.layoutDirection = .leftToRight
+                traits.preferredContentSizeCategory = contentSize
+                traits.userInterfaceIdiom = .phone
+                traits.horizontalSizeClass = .compact
+                traits.verticalSizeClass = .regular
+                traits.displayScale = 2
+                traits.displayGamut = .P3
+                traits.userInterfaceStyle = style
+            })
+        )
     }
 }
 
@@ -122,7 +123,20 @@ private final class SnapshotWindow: UIWindow {
     }
     
     override var traitCollection: UITraitCollection {
-        return UITraitCollection(traitsFrom: [super.traitCollection, configuration.traitCollection])
+        let base = super.traitCollection
+        let configTraits = configuration.traitCollection
+        return base.modifyingTraits { mutable in
+            // Copy desired properties from configuration's traits
+            mutable.userInterfaceStyle = configTraits.userInterfaceStyle
+            mutable.forceTouchCapability = configTraits.forceTouchCapability
+            mutable.layoutDirection = configTraits.layoutDirection
+            mutable.preferredContentSizeCategory = configTraits.preferredContentSizeCategory
+            mutable.userInterfaceIdiom = configTraits.userInterfaceIdiom
+            mutable.horizontalSizeClass = configTraits.horizontalSizeClass
+            mutable.verticalSizeClass = configTraits.verticalSizeClass
+            mutable.displayScale = configTraits.displayScale
+            mutable.displayGamut = configTraits.displayGamut
+        }
     }
     
     func snapshot() -> UIImage {
@@ -171,3 +185,4 @@ private class ImageStub: FeedImageCellControllerDelegate {
     
     func didCancelImageRequest() {}
 }
+
