@@ -19,17 +19,28 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
         }
     }()
 
+    private var onViewIsAppearing: ((ListViewController) -> Void)?
+    
     public var onRefresh: (() -> Void)?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = dataSource
-        configureErrorView()
-        refresh()
+        configureTableView()
+        onViewIsAppearing = { vc in
+            vc.onViewIsAppearing = nil
+            vc.refresh()
+        }
     }
     
-    private func configureErrorView() {
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+
+        onViewIsAppearing?(self)
+    }
+    
+    private func configureTableView() {
         let container = UIView()
         container.backgroundColor = .clear
         container.addSubview(errorView)
