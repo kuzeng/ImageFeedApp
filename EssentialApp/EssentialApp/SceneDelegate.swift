@@ -19,9 +19,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
     
     private lazy var store: FeedStore & FeedImageDataStore = {
-        try! CoreDataFeedStore(storeURL: NSPersistentContainer
-            .defaultDirectoryURL()
-            .appendingPathComponent("feed-store.sqlite"))
+        do {
+            return try CoreDataFeedStore(storeURL: NSPersistentContainer
+                .defaultDirectoryURL()
+                .appendingPathComponent("feed-store.sqlite"))
+        } catch {
+            return NullStore()
+        }
     }()
     
     private lazy var localFeedLoader: LocalFeedLoader = {
@@ -29,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
     
     private lazy var baseURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed")!
-
+    
     private lazy var navigationController = UINavigationController(
         rootViewController: FeedUIComposer.feedComposedWith(
             feedLoader: makeRemoteFeedLoaderWithLocalFallback,
@@ -94,9 +98,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
         
         return httpClient
-                .getPublisher(url: url)
-                .tryMap(FeedItemsMapper.map)
-                .eraseToAnyPublisher()
+            .getPublisher(url: url)
+            .tryMap(FeedItemsMapper.map)
+            .eraseToAnyPublisher()
     }
     
     private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {
