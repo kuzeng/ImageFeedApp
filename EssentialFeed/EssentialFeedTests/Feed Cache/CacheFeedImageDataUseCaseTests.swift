@@ -59,7 +59,8 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
 
     private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.SaveResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for load completion")
-
+        action()
+        
         sut.save(anyData(), for: anyURL()) { receivedResult in
             switch (receivedResult, expectedResult) {
             case (.success, .success):
@@ -75,8 +76,7 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
 
             exp.fulfill()
         }
-
-        action()
+        
         wait(for: [exp], timeout: 1.0)
     }
 }
