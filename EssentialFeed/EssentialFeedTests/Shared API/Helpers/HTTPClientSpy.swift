@@ -16,6 +16,7 @@ class HTTPClientSpy: HTTPClient {
     
     private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
     private(set) var cancelledURLs = [URL]()
+    private var stubbedResult: HTTPClient.Result?
     
     var requestedURLs: [URL] {
         return messages.map { $0.url }
@@ -23,6 +24,9 @@ class HTTPClientSpy: HTTPClient {
     
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
         messages.append((url, completion))
+        if let result = stubbedResult {
+            completion(result)
+        }
         return Task { [weak self] in
             self?.cancelledURLs.append(url)
         }
@@ -40,5 +44,19 @@ class HTTPClientSpy: HTTPClient {
             headerFields: nil
         )!
         messages[index].completion(.success((data, response)))
+    }
+    
+    func stub(with error: Error) {
+        stubbedResult = .failure(error)
+    }
+    
+    func stub(withStatusCode code: Int, data: Data, for url: URL) {
+        let response = HTTPURLResponse(
+            url: url,
+            statusCode: code,
+            httpVersion: nil,
+            headerFields: nil
+        )!
+        stubbedResult = .success((data, response))
     }
 }
