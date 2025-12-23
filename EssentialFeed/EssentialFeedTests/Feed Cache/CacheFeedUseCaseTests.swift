@@ -18,6 +18,8 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
+        store.completeDeletionSuccessfully()
+        store.completeInsertionSuccessfully()
         
         sut.save(uniqueImageFeed().models) { _ in }
         
@@ -27,9 +29,9 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
         let (sut, store) = makeSUT()
         let deletionError = anyNSError()
+        store.completeDeletion(with: deletionError)
         
         sut.save(uniqueImageFeed().models) { _ in }
-        store.completeDeletion(with: deletionError)
         
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
@@ -38,9 +40,10 @@ class CacheFeedUseCaseTests: XCTestCase {
         let timestamp = Date()
         let feed = uniqueImageFeed()
         let (sut, store) = makeSUT(currentDate: { timestamp })
+        store.completeDeletionSuccessfully()
+        store.completeInsertionSuccessfully()
         
         sut.save(feed.models) { _ in }
-        store.completeDeletionSuccessfully()
         
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed, .insert(feed.local, timestamp)])
     }
@@ -48,54 +51,51 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_failsOnDeletionError() {
         let (sut, store) = makeSUT()
         let deletionError = anyNSError()
+        store.completeDeletion(with: deletionError)
         
-        expect(sut, toCompleteWithError: deletionError) {
-            store.completeDeletion(with: deletionError)
-        }
+        expect(sut, toCompleteWithError: deletionError)
     }
     
     func test_save_failsOnInsertionError() {
         let (sut, store) = makeSUT()
         let insertionError = anyNSError()
+        store.completeDeletionSuccessfully()
+        store.completionInsertion(with: insertionError)
         
-        expect(sut, toCompleteWithError: insertionError) {
-            store.completeDeletionSuccessfully()
-            store.completionInsertion(with: insertionError)
-        }
+        expect(sut, toCompleteWithError: insertionError)
     }
     
     func test_save_succeedsOnSuccessfulCacheInsertion() {
         let (sut, store) = makeSUT()
+        store.completeDeletionSuccessfully()
+        store.completeInsertionSuccessfully()
         
-        expect(sut, toCompleteWithError: nil) {
-            store.completeDeletionSuccessfully()
-            store.completeInsertionSuccessfully()
-        }
+        expect(sut, toCompleteWithError: nil)
     }
     
     func test_save_doesNotDeliversDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
         let store = FeedStoreSpy()
+        store.completeDeletion(with: anyNSError())
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
         var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save(uniqueImageFeed().models) { receivedResult.append($0) }
         
         sut = nil
-        store.completeDeletion(with: anyNSError())
         
         XCTAssertTrue(receivedResult.isEmpty)
     }
     
     func test_save_doesNotDeliversInsertionErrorAfterSUTInstanceHasBeenDeallocated() {
         let store = FeedStoreSpy()
+        store.completeDeletionSuccessfully()
+        store.completionInsertion(with: anyNSError())
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
         var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save(uniqueImageFeed().models) { receivedResult.append($0) }
         
-        store.completeDeletionSuccessfully()
         sut = nil
-        store.completionInsertion(with: anyNSError())
         
         XCTAssertTrue(receivedResult.isEmpty)
     }
@@ -110,7 +110,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
-    private func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader, toCompleteWithError expectedError: NSError?, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for save completion")
         
         var receivedError: Error?
@@ -120,7 +120,6 @@ class CacheFeedUseCaseTests: XCTestCase {
             exp.fulfill()
         }
         
-        action()
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertEqual(receivedError as NSError?, expectedError, file: file, line: line)
