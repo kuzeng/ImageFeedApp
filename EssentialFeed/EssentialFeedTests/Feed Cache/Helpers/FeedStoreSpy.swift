@@ -9,7 +9,6 @@ import Foundation
 import EssentialFeed
 
 class FeedStoreSpy: FeedStore {
-
     enum ReceivedMessage: Equatable {
         case deleteCachedFeed
         case insert([LocalFeedImage], Date)
@@ -27,17 +26,7 @@ class FeedStoreSpy: FeedStore {
         try deletionResult?.get()
     }
     
-    func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
-        receivedMessages.append(.insert(feed, timestamp))
-        try insertionResult?.get()
-    }
-    
-    func retrieve() throws -> CachedFeed? {
-        receivedMessages.append(.retrieve)
-        return try retrievalResult?.get() ?? nil
-    }
-    
-    func completeDeletion(with error: NSError) {
+    func completeDeletion(with error: Error) {
         deletionResult = .failure(error)
     }
     
@@ -45,7 +34,12 @@ class FeedStoreSpy: FeedStore {
         deletionResult = .success(())
     }
     
-    func completionInsertion(with error: NSError) {
+    func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
+        receivedMessages.append(.insert(feed, timestamp))
+        try insertionResult?.get()
+    }
+    
+    func completeInsertion(with error: Error) {
         insertionResult = .failure(error)
     }
     
@@ -53,7 +47,12 @@ class FeedStoreSpy: FeedStore {
         insertionResult = .success(())
     }
     
-    func completeRetrieval(with error: NSError) {
+    func retrieve() throws -> CachedFeed? {
+        receivedMessages.append(.retrieve)
+        return try retrievalResult?.get()
+    }
+    
+    func completeRetrieval(with error: Error) {
         retrievalResult = .failure(error)
     }
     
@@ -63,9 +62,5 @@ class FeedStoreSpy: FeedStore {
     
     func completeRetrieval(with feed: [LocalFeedImage], timestamp: Date) {
         retrievalResult = .success(CachedFeed(feed: feed, timestamp: timestamp))
-    }
-    
-    func perform(_ action: @escaping () -> Void) {
-        action()
     }
 }

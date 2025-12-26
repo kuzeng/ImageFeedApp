@@ -18,42 +18,32 @@ public final class LocalFeedLoader {
 }
 
 extension LocalFeedLoader: FeedCache {
-    public typealias SaveResult = FeedCache.Result
+    public func save(_ feed: [FeedImage]) throws {
+        try store.deleteCachedFeed()
+        try store.insert(feed.toLocal(), timestamp: currentDate())
+    }
+}
+
+extension LocalFeedLoader {
+    public func load() throws -> [FeedImage] {
+        if let cache = try store.retrieve(), FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
+            return cache.feed.toModels()
+        }
+        return []
+    }
+}
+
+extension LocalFeedLoader {
+    private struct InvalidCache: Error {}
     
-    public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
-        completion(SaveResult {
+    public func validateCache() throws {
+        do {
+            if let cache = try store.retrieve(), !FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
+                throw InvalidCache()
+            }
+        } catch {
             try store.deleteCachedFeed()
-            try store.insert(feed.toLocal(), timestamp: currentDate())
-        })
-    }
-}
-
-extension LocalFeedLoader {
-    public typealias LoadResult = Swift.Result<[FeedImage], Error>
-    
-    public func load(completion: @escaping (LoadResult) -> Void) {
-        completion(LoadResult {
-            if let cache = try store.retrieve(), FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
-                return cache.feed.toModels()
-            }
-            return []
-        })
-    }
-}
-
-extension LocalFeedLoader {
-    public typealias ValidationResult = Result<Void, Error>
-    
-    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
-        completion(ValidationResult {
-            do {
-                if let cache = try store.retrieve(), !FeedCachePolicy.validate(cache.timestamp, against: currentDate()) {
-                    try store.deleteCachedFeed()
-                }
-            } catch {
-                try store.deleteCachedFeed()
-            }
-        })
+        }
     }
 }
 
