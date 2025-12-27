@@ -7,7 +7,8 @@
 
 import XCTest
 
-final class EssentialAppUIAcceptanceTests: XCTestCase {
+final @MainActor
+class EssentialAppUIAcceptanceTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

@@ -21,7 +21,7 @@ public class RemoteFeedImageDataLoader: FeedImageDataLoader {
     
     public func loadImageData(from url: URL) throws -> Data {
         let semaphore = DispatchSemaphore(value: 0)
-        var receivedResult: Result<Data, Swift.Error>?
+        nonisolated(unsafe) var receivedResult: Result<Data, Swift.Error>?
         
         client.get(from: url) { result in
             receivedResult = result

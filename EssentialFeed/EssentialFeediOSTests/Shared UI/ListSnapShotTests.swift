@@ -9,6 +9,7 @@ import XCTest
 import EssentialFeediOS
 @testable import EssentialFeed
 
+@MainActor
 class ListSnapShotTests: XCTestCase {
     
     func test_emptyList() {

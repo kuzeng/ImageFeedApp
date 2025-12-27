@@ -7,7 +7,8 @@
 
 import XCTest
 
-final class EssentialAppUIAcceptanceTestsLaunchTests: XCTestCase {
+final @MainActor
+class EssentialAppUIAcceptanceTestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
