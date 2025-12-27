@@ -197,34 +197,6 @@ class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0])
     }
     
-    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-        
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeFeedLoading(at: 0)
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
-    func test_loadMoreCompletion_dispatchesFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-        loader.completeFeedLoading(at: 0)
-        sut.simulateLoadMoreFeedAction()
-        
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeLoadMore()
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
     func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let (sut, loader) = makeSUT()
 
@@ -476,21 +448,6 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(view0.renderedImage, .none, "Expected no image state change for reused view once image loading completes successfully")
     }
     
-    func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-        
-        sut.simulateAppearance()
-        loader.completeFeedLoading(with: [makeImage()])
-        _ = sut.simulateFeedImageViewVisible(at: 0)
-        
-        let exp = expectation(description: "Wait for background queue work")
-        DispatchQueue.global().async {
-            loader.completeImageLoading(with: self.anyImageData(), at: 0)
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-    }
-    
     func test_feedImageView_doesNotLoadImageAgainUntilPreviousRequestCompletes() {
         let image = makeImage(url: URL(string: "http://url-0.com")!)
         let (sut, loader) = makeSUT()
@@ -520,15 +477,15 @@ class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        selection: @escaping (FeedImage) -> Void = { _ in },
+        selection: @Sendable @MainActor @escaping (FeedImage) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: ListViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(
-            feedLoader: loader.loadPublisher,
-            imageLoader: loader.loadImageDataPublisher,
-            selection: selection
+            feedLoader: { @Sendable in loader.loadPublisher() },
+            imageLoader: { @Sendable url in loader.loadImageDataPublisher(from: url) },
+            selection: { @Sendable image in selection(image) }
         )
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)

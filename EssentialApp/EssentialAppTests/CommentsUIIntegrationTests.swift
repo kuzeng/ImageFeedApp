@@ -108,9 +108,11 @@ class CommentsUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         sut.simulateAppearance()
         
+        let completeFirstLoad: () -> Void = { [weak loader] in loader?.completeCommentsLoading(at: 0) }
+        
         let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeCommentsLoading(at: 0)
+        DispatchQueue.global().async { [completeFirstLoad] in
+            completeFirstLoad()
             exp.fulfill()
         }
         
@@ -219,3 +221,4 @@ class CommentsUIIntegrationTests: XCTestCase {
         }
     }
 }
+

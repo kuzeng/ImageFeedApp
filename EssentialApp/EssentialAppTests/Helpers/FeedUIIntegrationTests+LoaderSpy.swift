@@ -12,6 +12,7 @@ import Combine
 
 extension FeedUIIntegrationTests {
     
+    @MainActor
     class LoaderSpy {
         
         // MARK: - FeedLoader
