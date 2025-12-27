@@ -25,11 +25,7 @@ public final class ErrorView: UIButton {
     }
     
     private var titleAttributes: AttributeContainer {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = NSTextAlignment.center
-        
         var attributes = AttributeContainer()
-        attributes.paragraphStyle = paragraphStyle
         attributes.font = UIFont.preferredFont(forTextStyle: .body)
         return attributes
     }
@@ -40,6 +36,7 @@ public final class ErrorView: UIButton {
         configuration.baseForegroundColor = .white
         configuration.background.backgroundColor = .errorBackgroundColor
         configuration.background.cornerRadius = 0
+        configuration.titleAlignment = .center
         self.configuration = configuration
         
         addTarget(self, action: #selector(hideMessageAnimated), for: .touchUpInside)

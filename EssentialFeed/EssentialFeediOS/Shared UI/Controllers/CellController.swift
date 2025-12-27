@@ -8,40 +8,27 @@
 import UIKit
 
 public struct CellController {
-    let id: AnyHashable
+    let id: any Hashable & Sendable
     let dataSource: UITableViewDataSource
     let delegate: UITableViewDelegate?
     let dataSourcePrefetching: UITableViewDataSourcePrefetching?
     
-    public init(id: AnyHashable, _ dataSource: UITableViewDataSource & UITableViewDelegate & UITableViewDataSourcePrefetching) {
+    public init(id: any Hashable & Sendable, _ dataSource: UITableViewDataSource) {
         self.id = id
         self.dataSource = dataSource
-        self.delegate = dataSource
-        self.dataSourcePrefetching = dataSource
-    }
-    
-    public init(id: AnyHashable, _ dataSource: UITableViewDataSource & UITableViewDelegate) {
-        self.id = id
-        self.dataSource = dataSource
-        self.delegate = dataSource
-        self.dataSourcePrefetching = nil
-    }
-    
-    public init(id: AnyHashable, _ dataSource: UITableViewDataSource) {
-        self.id = id
-        self.dataSource = dataSource
-        self.delegate = nil
-        self.dataSourcePrefetching = nil
+        self.delegate = dataSource as? UITableViewDelegate
+        self.dataSourcePrefetching = dataSource as? UITableViewDataSourcePrefetching
     }
 }
 
-extension CellController: Equatable {
-    public static func == (lhs: CellController, rhs: CellController) -> Bool {
-        lhs.id == rhs.id
+extension CellController: nonisolated Equatable {
+    public nonisolated static func == (lhs: CellController, rhs: CellController) -> Bool {
+        AnyHashable(lhs.id) == AnyHashable(rhs.id)
     }
 }
-extension CellController: Hashable {
-    public func hash(into hasher: inout Hasher) {
+extension CellController: nonisolated Hashable {
+    public nonisolated func hash(into hasher: inout Hasher) {
+        let id = AnyHashable(self.id)
         hasher.combine(id)
     }
 }
