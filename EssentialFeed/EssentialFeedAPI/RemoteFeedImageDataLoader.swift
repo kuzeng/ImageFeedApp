@@ -8,7 +8,7 @@
 import Foundation
 import EssentialFeed
 
-public class RemoteFeedImageDataLoader: FeedImageDataLoader {
+public final class RemoteFeedImageDataLoader: FeedImageDataLoader, @unchecked Sendable {
     private let client: HTTPClient
     
     public init(client: HTTPClient) {
@@ -20,22 +20,27 @@ public class RemoteFeedImageDataLoader: FeedImageDataLoader {
         case invalidData
     }
     
+    private final class ResultBox: @unchecked Sendable {
+        var result: Result<Data, Swift.Error>?
+    }
+    
     public func loadImageData(from url: URL) throws -> Data {
         let semaphore = DispatchSemaphore(value: 0)
-        var receivedResult: Result<Data, Swift.Error>?
+        let box = ResultBox()
         
-        client.get(from: url) { result in
-            receivedResult = result
-                .mapError { _ in Error.connectivity }
-                .flatMap { (data, response) in
-                    let isValidResponse = response.isOK && !data.isEmpty
-                    return isValidResponse ? .success(data) : .failure(Error.invalidData)
-                }
+        Task {
+            do {
+                let (data, response) = try await client.get(from: url)
+                let isValidResponse = response.isOK && !data.isEmpty
+                box.result = isValidResponse ? .success(data) : .failure(Error.invalidData)
+            } catch {
+                box.result = .failure(Error.connectivity)
+            }
             semaphore.signal()
         }
         
         semaphore.wait()
         
-        return try receivedResult!.get()
+        return try box.result!.get()
     }
 }
