@@ -10,7 +10,7 @@ import EssentialFeed
 
 class HTTPClientSpy: HTTPClient {
     private(set) var requestedURLs = [URL]()
-    private var stubbedResult: HTTPClient.Result?
+    private var stubbedResult: Result<(Data, HTTPURLResponse), Error>?
     
     func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
         requestedURLs.append(url)

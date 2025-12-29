@@ -211,23 +211,14 @@ extension CoreDataFeedStore {
 }
 
 private class HTTPClientStub: HTTPClient {
-    private class Task: HTTPClientTask {
-        func cancel() {}
-    }
+    private let stub: (URL) -> Result<(Data, HTTPURLResponse), Error>
     
-    private let stub: (URL) -> HTTPClient.Result
-    
-    init(stub: @escaping (URL) -> HTTPClient.Result) {
+    init(stub: @escaping (URL) -> Result<(Data, HTTPURLResponse), Error>) {
         self.stub = stub
     }
     
     func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
         try stub(url).get()
-    }
-    
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-        completion(stub(url))
-        return Task()
     }
     
     static var offline: HTTPClientStub {
