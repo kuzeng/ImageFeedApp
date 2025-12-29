@@ -241,6 +241,7 @@ extension AnyDispatchQueueScheduler {
         CoreDataFeedStoreScheduler(store: store).eraseToAnyScheduler()
     }
     
+    @MainActor
     private struct CoreDataFeedStoreScheduler: Scheduler {
         let store: CoreDataFeedStore
         
@@ -253,7 +254,13 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                if #available(iOS 26.0, *) {
+                    Task.immediate {
+                        await store.perform { uncheckedAction() }
+                    }
+                } else {
+                    store.perform { uncheckedAction() }
+                }
             }
             return AnyCancellable {}
         }
@@ -263,7 +270,13 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                if #available(iOS 26.0, *) {
+                    Task.immediate {
+                        await store.perform { uncheckedAction() }
+                    }
+                } else {
+                    store.perform { uncheckedAction() }
+                }
             }
         }
         
@@ -272,7 +285,13 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                store.perform { uncheckedAction() }
+                if #available(iOS 26.0, *) {
+                    Task.immediate {
+                        await store.perform { uncheckedAction() }
+                    }
+                } else {
+                    store.perform { uncheckedAction() }
+                }
             }
         }
     }
