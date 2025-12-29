@@ -258,8 +258,6 @@ extension AnyDispatchQueueScheduler {
                     Task.immediate {
                         await store.perform { uncheckedAction() }
                     }
-                } else {
-                    store.perform { uncheckedAction() }
                 }
             }
             return AnyCancellable {}
@@ -274,8 +272,6 @@ extension AnyDispatchQueueScheduler {
                     Task.immediate {
                         await store.perform { uncheckedAction() }
                     }
-                } else {
-                    store.perform { uncheckedAction() }
                 }
             }
         }
@@ -289,8 +285,6 @@ extension AnyDispatchQueueScheduler {
                     Task.immediate {
                         await store.perform { uncheckedAction() }
                     }
-                } else {
-                    store.perform { uncheckedAction() }
                 }
             }
         }
