@@ -41,13 +41,13 @@ class FeedAcceptanceTests: XCTestCase {
     func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() throws {
         let sharedStore = try CoreDataFeedStore.empty
         
-        let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
+        let onlineFeed = try launch(httpClient: .online(response), store: sharedStore)
         onlineFeed.simulateFeedImageViewVisible(at: 0)
         onlineFeed.simulateFeedImageViewVisible(at: 1)
         onlineFeed.simulateLoadMoreFeedAction()
         onlineFeed.simulateFeedImageViewVisible(at: 2)
         
-        let offlineFeed = launch(httpClient: .offline, store: sharedStore)
+        let offlineFeed = try launch(httpClient: .offline, store: sharedStore)
         
         XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 3)
         XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData0())
@@ -89,9 +89,11 @@ class FeedAcceptanceTests: XCTestCase {
     private func launch(
         httpClient: HTTPClientStub = .offline,
         store: CoreDataFeedStore
-    ) -> ListViewController {
+    ) throws -> ListViewController {
         let sut = SceneDelegate(httpClient: httpClient, store: store)
-        sut.window = UIWindow(frame: CGRect(x: 0, y: 0, width: 390, height: 1))
+        let dummyScene = try XCTUnwrap((UIWindowScene.self as NSObject.Type).init() as? UIWindowScene)
+        sut.window = UIWindow(windowScene: dummyScene)
+        sut.window?.frame = CGRect(x: 0, y: 0, width: 390, height: 1)
         sut.configureWindow()
         
         let nav = sut.window?.rootViewController as? UINavigationController
@@ -207,25 +209,5 @@ extension CoreDataFeedStore {
             try store.insert([], timestamp: Date())
             return store
         }
-    }
-}
-
-private class HTTPClientStub: HTTPClient {
-    private let stub: (URL) -> Result<(Data, HTTPURLResponse), Error>
-    
-    init(stub: @escaping (URL) -> Result<(Data, HTTPURLResponse), Error>) {
-        self.stub = stub
-    }
-    
-    func get(from url: URL) async throws -> (Data, HTTPURLResponse) {
-        try stub(url).get()
-    }
-    
-    static var offline: HTTPClientStub {
-        HTTPClientStub(stub: { _ in .failure(NSError(domain: "offline", code: 0)) })
-    }
-    
-    static func online(_ stub: @escaping (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
-        HTTPClientStub { url in .success(stub(url)) }
     }
 }

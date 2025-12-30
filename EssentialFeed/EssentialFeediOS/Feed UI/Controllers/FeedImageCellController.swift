@@ -22,8 +22,8 @@ public final class FeedImageCellController: NSObject {
     private var cell: FeedImageCell?
     
     public init(viewModel: FeedImageViewModel, delegate: FeedImageCellControllerDelegate, selection: @escaping () -> Void) {
-        self.delegate = delegate
         self.viewModel = viewModel
+        self.delegate = delegate
         self.selection = selection
     }
 }
@@ -39,14 +39,15 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         cell?.locationContainer.isHidden = !viewModel.hasLocation
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
+        cell?.feedImageView.image = nil
+        cell?.feedImageContainer.isShimmering = true
+        cell?.feedImageRetryButton.isHidden = true
         cell?.onRetry = { [weak self] in
             self?.delegate.didRequestImage()
         }
         cell?.onReuse = { [weak self] in
             self?.releaseCellForReuse()
         }
-        cell?.feedImageContainer.isShimmering = true
-        cell?.feedImageRetryButton.isHidden = true
         delegate.didRequestImage()
         return cell!
     }
@@ -55,12 +56,17 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
         selection()
     }
     
-    public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.cell = cell as? FeedImageCell
         delegate.didRequestImage()
     }
     
     public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cancelLoad()
+    }
+    
+    public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        delegate.didRequestImage()
     }
     
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
@@ -73,15 +79,14 @@ extension FeedImageCellController: UITableViewDataSource, UITableViewDelegate, U
     }
     
     private func releaseCellForReuse() {
+        cell?.onReuse = nil
         cell = nil
     }
 }
 
 extension FeedImageCellController: ResourceView, ResourceLoadingView, ResourceErrorView {
-    
     public func display(_ viewModel: UIImage) {
         cell?.feedImageView.setImageAnimated(viewModel)
-        cell?.feedImageView.image = viewModel
     }
     
     public func display(_ viewModel: ResourceLoadingViewModel) {

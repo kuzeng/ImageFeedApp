@@ -9,7 +9,6 @@ import UIKit
 import EssentialFeediOS
 
 extension ListViewController {
-    
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()
@@ -87,7 +86,7 @@ extension ListViewController {
 
 extension ListViewController {
     func numberOfRenderedComments() -> Int {
-        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: commentsSection)
+        numberOfRows(in: commentsSection)
     }
     
     func commentMessage(at row: Int) -> String? {
@@ -103,24 +102,28 @@ extension ListViewController {
     }
     
     private func commentView(at row: Int) -> ImageCommentCell? {
-        guard numberOfRenderedComments() > row else {
-            return nil
-        }
-        
-        let ds = tableView.dataSource
-        let index = IndexPath(row: row, section: commentsSection)
-        return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentCell
+        cell(row: row, section: commentsSection) as? ImageCommentCell
     }
     
-    private var commentsSection: Int {
-        return 0
-    }
+    private var commentsSection: Int { 0 }
 }
 
 extension ListViewController {
+    
     @discardableResult
     func simulateFeedImageViewVisible(at index: Int) -> FeedImageCell? {
         return feedImageView(at: index) as? FeedImageCell
+    }
+    
+    @discardableResult
+    func simulateFeedImageBecomingVisibleAgain(at row: Int) -> FeedImageCell? {
+        let view = simulateFeedImageViewNotVisible(at: row)
+        
+        let delegate = tableView.delegate
+        let index = IndexPath(row: row, section: feedImagesSection)
+        delegate?.tableView?(tableView, willDisplay: view!, forRowAt: index)
+        
+        return view
     }
     
     @discardableResult
@@ -135,7 +138,7 @@ extension ListViewController {
     }
     
     func simulateTapOnFeedImage(at row: Int) {
-        let delegate = tableView?.delegate
+        let delegate = tableView.delegate
         let index = IndexPath(row: row, section: feedImagesSection)
         delegate?.tableView?(tableView, didSelectRowAt: index)
     }
@@ -157,13 +160,13 @@ extension ListViewController {
     func simulateLoadMoreFeedAction() {
         guard let view = loadMoreFeedCell() else { return }
         
-        let delegate = tableView?.delegate
+        let delegate = tableView.delegate
         let index = IndexPath(row: 0, section: feedLoadMoreSection)
         delegate?.tableView?(tableView, willDisplay: view, forRowAt: index)
     }
     
     func simulateTapOnLoadMoreFeedError() {
-        let delegate = tableView?.delegate
+        let delegate = tableView.delegate
         let index = IndexPath(row: 0, section: feedLoadMoreSection)
         delegate?.tableView?(tableView, didSelectRowAt: index)
     }
@@ -189,7 +192,7 @@ extension ListViewController {
     }
     
     func numberOfRenderedFeedImageViews() -> Int {
-        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection: feedImagesSection)
+        numberOfRows(in: feedImagesSection)
     }
     
     func feedImageView(at row: Int) -> UITableViewCell? {
@@ -198,5 +201,4 @@ extension ListViewController {
     
     private var feedImagesSection: Int { 0 }
     private var feedLoadMoreSection: Int { 1 }
-    
 }

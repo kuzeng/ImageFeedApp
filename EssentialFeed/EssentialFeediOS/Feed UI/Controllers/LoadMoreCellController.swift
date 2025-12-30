@@ -54,11 +54,11 @@ public class LoadMoreCellController: NSObject, UITableViewDataSource, UITableVie
 }
 
 extension LoadMoreCellController: ResourceLoadingView, ResourceErrorView {
-    public func display(_ viewModel: EssentialFeed.ResourceErrorViewModel) {
+    public func display(_ viewModel: ResourceErrorViewModel) {
         cell.message = viewModel.message
     }
     
-    public func display(_ viewModel: EssentialFeed.ResourceLoadingViewModel) {
+    public func display(_ viewModel: ResourceLoadingViewModel) {
         cell.isLoading = viewModel.isLoading
     }
 }

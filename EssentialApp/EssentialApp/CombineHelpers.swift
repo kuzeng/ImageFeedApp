@@ -45,26 +45,14 @@ public extension HTTPClient {
         return Deferred {
             Future { completion in
                 nonisolated(unsafe) let uncheckedCompletion = completion
-                if #available(iOS 26.0, *) {
-                    task = Task.immediate {
-                        do {
-                            let result = try await self.get(from: url)
-                            uncheckedCompletion(.success(result))
-                        } catch {
-                            uncheckedCompletion(.failure(error))
-                        }
+                task = Task.immediate {
+                    do {
+                        let result = try await self.get(from: url)
+                        uncheckedCompletion(.success(result))
+                    } catch {
+                        uncheckedCompletion(.failure(error))
                     }
-                } else {
-                    task = Task {
-                        do {
-                            let result = try await self.get(from: url)
-                            uncheckedCompletion(.success(result))
-                        } catch {
-                            uncheckedCompletion(.failure(error))
-                        }
-                    }
-                }
-            }
+                }            }
         }
         .handleEvents(receiveCancel: { task?.cancel() })
         .eraseToAnyPublisher()
@@ -254,10 +242,8 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                if #available(iOS 26.0, *) {
-                    Task.immediate {
-                        await store.perform { uncheckedAction() }
-                    }
+                Task.immediate {
+                    await store.perform { uncheckedAction() }
                 }
             }
             return AnyCancellable {}
@@ -268,10 +254,8 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                if #available(iOS 26.0, *) {
-                    Task.immediate {
-                        await store.perform { uncheckedAction() }
-                    }
+                Task.immediate {
+                    await store.perform { uncheckedAction() }
                 }
             }
         }
@@ -281,10 +265,8 @@ extension AnyDispatchQueueScheduler {
                 action()
             } else {
                 nonisolated(unsafe) let uncheckedAction = action
-                if #available(iOS 26.0, *) {
-                    Task.immediate {
-                        await store.perform { uncheckedAction() }
-                    }
+                Task.immediate {
+                    await store.perform { uncheckedAction() }
                 }
             }
         }

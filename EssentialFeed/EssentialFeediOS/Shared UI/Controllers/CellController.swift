@@ -26,6 +26,7 @@ extension CellController: nonisolated Equatable {
         AnyHashable(lhs.id) == AnyHashable(rhs.id)
     }
 }
+
 extension CellController: nonisolated Hashable {
     public nonisolated func hash(into hasher: inout Hasher) {
         let id = AnyHashable(self.id)
