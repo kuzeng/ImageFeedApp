@@ -563,7 +563,7 @@ class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        selection: @MainActor @Sendable @escaping (FeedImage) -> Void = { _ in },
+        selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: ListViewController, loader: LoaderSpy) {
