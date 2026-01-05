@@ -14,7 +14,7 @@ import EssentialFeediOS
 @MainActor
 class FeedUIIntegrationTests: XCTestCase {
     
-    func test_feedView_hasTitle() {
+    func test_feedView_hasTitle() async {
         let (sut, _) = makeSUT()
         
         sut.simulateAppearance()
@@ -57,7 +57,7 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
-    func test_loadFeedActions_runsAutomaticallyOnlyOnFirstAppearance() {
+    func test_loadFeedActions_runsAutomaticallyOnlyOnFirstAppearance() async {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view appears")
 
@@ -563,15 +563,15 @@ class FeedUIIntegrationTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT(
-        selection: @MainActor @escaping (FeedImage) -> Void = { _ in },
+        selection: @MainActor @Sendable @escaping (FeedImage) -> Void = { _ in },
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> (sut: ListViewController, loader: LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(
-            feedLoader: { @Sendable in try await loader.loadFeed() },
-            imageLoader: { @Sendable url in try await loader.loadImageData(from: url) },
-            selection: { @Sendable image in selection(image) }
+            feedLoader: { try await loader.loadFeed() },
+            imageLoader: { try await loader.loadImageData(from: $0) },
+            selection: selection
         )
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
