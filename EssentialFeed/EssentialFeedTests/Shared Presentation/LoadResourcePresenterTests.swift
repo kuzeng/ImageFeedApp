@@ -81,7 +81,7 @@ class LoadResourcePresenterTests: XCTestCase {
         return (sut, view)
     }
     
-    func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+    func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
         let table = "Shared"
         let bundle = Bundle(for: SUT.self)
         let value = bundle.localizedString(forKey: key, value: nil, table: table)

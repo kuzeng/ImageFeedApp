@@ -56,7 +56,7 @@ class ImageCommentsPresentationTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
+    private func localized(_ key: String, file: StaticString = #filePath, line: UInt = #line) -> String {
         let table = "ImageComments"
         let bundle = Bundle(for: ImageCommentsPresenter.self)
         let value = bundle.localizedString(forKey: key, value: nil, table: table)

@@ -8,7 +8,7 @@
 import XCTest
 import UIKit
 
-func assert(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+func assert(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
     let snapshotURL = makeSnapshotURL(named: name, file: file)
     let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
     
@@ -27,7 +27,7 @@ func assert(snapshot: UIImage, named name: String, file: StaticString = #file, l
     }
 }
 
-func recordSnapshot(snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+func recordSnapshot(snapshot: UIImage, named name: String, file: StaticString = #filePath, line: UInt = #line) {
     let snapshotURL = makeSnapshotURL(named: name, file: file)
     let snapshotData = makeSnapshotData(for: snapshot, file: file, line: line)
     

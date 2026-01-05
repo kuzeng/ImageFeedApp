@@ -11,7 +11,7 @@ import EssentialFeed
 protocol FeedLoaderTestCase: XCTestCase {}
 
 extension FeedLoaderTestCase {
-    func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: Swift.Result<[FeedImage], Error>, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: Swift.Result<[FeedImage], Error>, file: StaticString = #filePath, line: UInt = #line) {
         let receivedResult: Swift.Result<[FeedImage], Error>
         do {
             let feed = try sut.load()

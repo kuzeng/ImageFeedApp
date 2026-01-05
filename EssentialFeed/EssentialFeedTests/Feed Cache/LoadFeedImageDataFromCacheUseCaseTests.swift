@@ -70,11 +70,11 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         return .failure(LocalFeedImageDataLoader.LoadError.failed)
     }
     
-    private func never(file: StaticString = #file, line: UInt = #line) {
+    private func never(file: StaticString = #filePath, line: UInt = #line) {
         XCTFail("Expected no no invocations", file: file, line: line)
     }
     
-    private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: Result<Data, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: Result<Data, Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         action()
         
         let receivedResult = Result { try sut.loadImageData(from: anyURL()) }

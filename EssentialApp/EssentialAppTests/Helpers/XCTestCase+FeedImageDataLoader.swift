@@ -11,7 +11,7 @@ import EssentialFeed
 protocol FeedImageDataLoaderTestCase: XCTestCase {}
 
 extension FeedImageDataLoaderTestCase {
-    func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: Result<Data, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: Result<Data, Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         action()
         
         let receivedResult = Result { try sut.loadImageData(from: anyURL()) }
